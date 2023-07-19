@@ -8,7 +8,6 @@ authors:
 - Pascal Witt
 license: AGPLv3
 
-# TODO
 date: 2023-07-17
 
 homepage: https://github.com/RealTryZ/Wattometer
