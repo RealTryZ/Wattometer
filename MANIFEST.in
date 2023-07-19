@@ -1,0 +1,4 @@
+include README.md
+recursive-include octoprint_Wattometer/templates *
+recursive-include octoprint_Wattometer/translations *
+recursive-include octoprint_Wattometer/static *
