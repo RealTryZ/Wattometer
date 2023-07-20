@@ -28,10 +28,8 @@ class Wattometer(octoprint.plugin.StartupPlugin,
             address="fritz.box"
         )
 
-    def on_settings_initialized(self):
-        self.connect()
-
     def addWatt(self):
+        self.connect()
         wattMeasurement = float(self.fc.call_http("getswitchpower", self._settings.get(["ain"]))['content'][:-1]) / 1000
         self.watt = wattMeasurement
         self._plugin_manager.send_plugin_message(self._identifier, self.watt)
@@ -47,7 +45,10 @@ class Wattometer(octoprint.plugin.StartupPlugin,
 
     def get_assets(self):
         return dict(
-            js=["js/Wattometer.js"],
+            js=[
+                "js/Wattometer.js",
+                "js/Chart.js"
+                ],
             less=["less/Wattometer.less"]
         )
 
