@@ -59,8 +59,26 @@ class Wattometer(octoprint.plugin.StartupPlugin,
                 custom_bindings=False
             )
         ]
+    
+    def get_update_information(self):
+        return dict(
+            updateplugindemo=dict(
+                displayName=self._plugin_name,
+                displayVersion=self._plugin_version,
+
+                type="github_release",
+                current=self._plugin_version,
+                user="RealTryZ",
+                repo="Wattometer",
+
+                pip="https://github.com/RealTryZ/Wattometer/archive/{target}.zip"
+            )
+        )
 
 
 __plugin_name__ = "Wattometer"
 __plugin_pythoncompat__ = ">=3.7,<4"
 __plugin_implementation__ = Wattometer()
+__plugin_hooks__ = {
+"octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
+}
