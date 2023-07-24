@@ -9,13 +9,13 @@ $(function() {
       self.settings = parameters[0];
       self.labels = [];
       self.watt = ko.observableArray();
-      self.totalWatt = ko.observable();
-
-      self.totalWatt(0);
+      self.totalWatt = ko.observable(0.0);
 
       self.onDataUpdaterPluginMessage = function(plugin, data) {
         if(plugin !== "Wattometer") return;
         if(data == "Reset"){
+          self.time = 0
+          self.allWatt = 0
           self.totalWatt(0.0);
           self.watt().length = 0;
           self.labels.length = 0;
@@ -23,15 +23,14 @@ $(function() {
           return
         }
 
-        self.allWatt += (parseFloat(data) * (5 / 3600)); 
+        self.allWatt += (parseFloat(data) * (parseInt(self.settings.settings.plugins.Wattometer.intervall()) / 3600)); 
         self.totalWatt(self.allWatt.toFixed(2));
-        
+
         self.watt.push(parseFloat(data));
 
-        if (self.time >= -60) {
+        if (self.time >= -parseInt(self.settings.settings.plugins.Wattometer.displaytime())) {
           self.labels.unshift(self.time);
-          self.time -= 5;
-          console.log(self.watt)
+          self.time -= parseInt(self.settings.settings.plugins.Wattometer.intervall());
         } else {
           self.watt.shift();
         }
