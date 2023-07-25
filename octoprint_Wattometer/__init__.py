@@ -57,7 +57,7 @@ class Wattometer(octoprint.plugin.StartupPlugin,
                 "js/Wattometer.js",
                 "js/Chart.js"
             ],
-            less=["less/Wattometer.less"]
+            css=["css/Wattometer.css"]
         )
 
     def get_template_configs(self):
