@@ -11,7 +11,30 @@ $(function() {
       self.watt = ko.observableArray();
       self.totalWatt = ko.observable(0.0);
 
-      var ctx = document.getElementById('myChart').getContext('2d')
+      self.onAfterBinding = function(){
+        var ctx = document.getElementById('myChart').getContext('2d')
+        self.chart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [{
+              label: "Watt",
+              backgroundColor:"rgba(0,0,255,1.0)",
+              borderColor: "rgba(0,10,255,1.0)",
+              fill: false,
+              data: []
+            }]
+          },
+          options:{
+            bezierCurve : false,
+            title:{
+              display: true,
+              text: "Wattometer"
+            }
+          }
+        });
+      }
+      
 
       self.onDataUpdaterPluginMessage = function(plugin, data) {
         if(plugin !== "Wattometer") return;
@@ -48,26 +71,7 @@ $(function() {
       }
 
 
-      self.chart = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: [],
-          datasets: [{
-            label: "Watt",
-            backgroundColor:"rgba(0,0,255,1.0)",
-            borderColor: "rgba(0,10,255,1.0)",
-            fill: false,
-            data: []
-          }]
-        },
-        options:{
-          bezierCurve : false,
-          title:{
-            display: true,
-            text: "Wattometer"
-          }
-        }
-      });
+      
     }
 
     // This is how our plugin registers itself with the application, by adding some configuration
