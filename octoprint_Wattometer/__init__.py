@@ -62,10 +62,8 @@ class Wattometer(octoprint.plugin.StartupPlugin,
 
     def get_template_configs(self):
         return [
-            dict(
-                type="settings",
-                custom_bindings=False
-            )
+            dict(type="tab", template="wattometer_tab.jinja2", custom_bindings=True),
+            dict(type="settings", template="wattometer_settings.jinja2", custom_bindings=False)
         ]
 
     def get_update_information(self):
