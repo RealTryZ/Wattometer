@@ -15,13 +15,7 @@ class Wattometer(octoprint.plugin.StartupPlugin,
 
     def __init__(self):
         self.fc = None
-        self.watt = 0   
-
-    def connect(self):
-        try:
-            self.fc = FritzConnection(address=self._settings.get(["address"]), user=self._settings.get(["username"]), password=self._settings.get(["password"]))
-        except:
-            self._logger.exception("Failed to initialize connection. Likely incorrect credential or permission of user account.")
+        self.watt = 0
 
     def get_settings_defaults(self):
         return dict(
@@ -37,6 +31,20 @@ class Wattometer(octoprint.plugin.StartupPlugin,
     def on_settings_save(self, data):
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
         self.connect()
+
+    def connect(self):
+        self.fc = FritzConnection(address=self._settings.get(["address"]), user=self._settings.get(["username"]), password=self._settings.get(["password"]))
+        self.testConnection()
+
+    def testConnection(self):
+        try:
+            self.fc.call_http("getswitchpower", self._settings.get(["ain"]))
+            self.setConnectionError(False)
+        except:
+            self.setConnectionError(True)
+
+    def setConnectionError(self, conError):
+        self._plugin_manager.send_plugin_message(self._identifier, conError)
 
     def addWatt(self):
         wattMeasurement = float(self.fc.call_http("getswitchpower", self._settings.get(["ain"]))['content'][:-1]) / 1000

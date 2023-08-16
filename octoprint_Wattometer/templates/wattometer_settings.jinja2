@@ -1,28 +1,35 @@
-<form class="form-horizontal">
-    <div class="control-group">
-        <label class="control-label">{{ _('Address of FRITZ!Box') }}</label>
-        <div class="controls">
-            <input id="w-50" type="text" class="input" data-bind="value: settings.plugins.Wattometer.address">
+<form>
+    <div>
+        <div id="block-left">
+            <label >{{ _('Address of FRITZ!Box') }}</label>
+            <input  type="text" class="input" data-bind="value: settings.plugins.Wattometer.address">
         </div>
-        <label class="control-label">{{ _('FRITZ!Box Username') }}</label>
-        <div class="controls">
-            <input id="w-50" type="text" class="input" data-bind="value: settings.plugins.Wattometer.username">
+
+        <div id="block-right">
+            <label >{{ _('AIN of Smart Plug') }}</label>
+            <input  type="text" class="input" data-bind="value: settings.plugins.Wattometer.ain">        
         </div>
-        <label class="control-label">{{ _('FRITZ!Box Password') }}</label>
-        <div class="controls">
-            <input id="w-50" type="password" class="input" data-bind="value: settings.plugins.Wattometer.password">
+
+        <div id="block-left">
+            <label >{{ _('FRITZ!Box Username') }}</label>
+            <input  type="text" class="input" data-bind="value: settings.plugins.Wattometer.username">
         </div>
-        <label class="control-label">{{ _('AIN of Smart Plug') }}</label>
-        <div class="controls">
-            <input id="w-50" type="text" class="input" data-bind="value: settings.plugins.Wattometer.ain">
+            
+        <div id="block-right">
+            <label >{{ _('FRITZ!Box Password') }}</label>
+            <input  type="password" class="input" data-bind="value: settings.plugins.Wattometer.password">        
         </div>
-        <label class="control-label">{{ _('Measurement Intervall') }}</label>
-        <div class="controls">
-            <input id="w-50" type="number" class="input" data-bind="value: settings.plugins.Wattometer.intervall">
+        
+        <div id="block-left">
+            <label>{{ _('Measurement Intervall (sec)') }}</label>
+            <input type="number" class="input" data-bind="value: settings.plugins.Wattometer.intervall">        
         </div>
-        <label class="control-label">{{ _('Display Time') }}</label>
-        <div class="controls">
-            <input id="w-50" type="number" class="input" data-bind="value: settings.plugins.Wattometer.displaytime">
+        
+        <div id="block-right">
+            <label>{{ _('Display Time (sec)') }}</label>
+            <input type="number" class="input" data-bind="value: settings.plugins.Wattometer.displaytime">        
         </div>
+        
+        
     </div>
 </form>

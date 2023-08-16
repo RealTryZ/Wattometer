@@ -2,6 +2,8 @@ $(function() {
     function WattometerViewModel(parameters) {
       var self = this;
 
+      self.connectionError = ko.observable("");
+
       self.time = 0;
 
       self.allWatt = 0;
@@ -38,6 +40,16 @@ $(function() {
 
       self.onDataUpdaterPluginMessage = function(plugin, data) {
         if(plugin !== "Wattometer") return;
+
+        if(data == true) {
+          self.connectionError("Failed to initialize connection. Likely incorrect credential or permission of user account.")
+          console.log(self.connectionError())
+          return};
+        if(data == false) {
+          self.connectionError("")
+          console.log(self.connectionError())
+          return };
+
         if(data == "Reset"){
           self.time = 0
           self.allWatt = 0

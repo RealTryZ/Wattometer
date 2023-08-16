@@ -3,6 +3,18 @@
     text-align: center;
 }
 
-#w-50{
-    width: 150px;
+#block-left{
+    float: left;
+    width: 50%;
 }
+
+#block-right{
+    float: left;
+    width: 50%;
+}
+
+#red-center{
+    text-align: center;
+    color: crimson;
+}
+
