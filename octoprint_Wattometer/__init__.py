@@ -39,6 +39,8 @@ class Wattometer(octoprint.plugin.StartupPlugin,
     def testConnection(self):
         try:
             self.fc.call_http("getswitchpower", self._settings.get(["ain"]))
+            self.timer = RepeatedTimer(float(self._settings.get(["intervall"])), self.addWatt, None, None, True)
+            self.timer.start()
             self.setConnectionError(False)
         except:
             self.setConnectionError(True)
@@ -53,11 +55,13 @@ class Wattometer(octoprint.plugin.StartupPlugin,
 
     def on_event(self, event, payload):
         if event == octoprint.events.Events.PRINT_STARTED:
-            self.timer = RepeatedTimer(float(self._settings.get(["intervall"])), self.addWatt, None, None, True)
-            self.timer.start()
-        if event == octoprint.events.Events.PRINT_CANCELLING or event == octoprint.events.Events.PRINT_DONE:
             self._plugin_manager.send_plugin_message(self._identifier, "Reset")
-            self.timer.cancel()
+            self._plugin_manager.send_plugin_message(self._identifier, "Print_Started")
+        if event == octoprint.events.Events.PRINT_CANCELLING:
+            self._plugin_manager.send_plugin_message(self._identifier, "Reset")
+            self._plugin_manager.send_plugin_message(self._identifier, "Print_Cancelled")
+        if event == octoprint.events.Events.PRINT_DONE:
+            self._plugin_manager.send_plugin_message(self._identifier, "Print_Done")
 
     def get_assets(self):
         return dict(

@@ -7,6 +7,8 @@ $(function() {
       self.time = 0;
 
       self.allWatt = 0;
+      self.isPrintStarted == false;
+      self.isPrintDone;
 
       self.settings = parameters[0];
       self.labels = [];
@@ -44,24 +46,31 @@ $(function() {
         if(data == true) {
           self.connectionError("Failed to initialize connection. Likely incorrect credential or permission of user account.")
           console.log(self.connectionError())
-          return};
-        if(data == false) {
+          return
+        } else if(data == false) {
           self.connectionError("")
           console.log(self.connectionError())
-          return };
-
-        if(data == "Reset"){
-          self.time = 0
+          return
+        } else if (data == "Reset"){
           self.allWatt = 0
           self.totalWatt(0.0);
-          self.watt().length = 0;
-          self.labels.length = 0;
-          addData(self.chart, self.labels, self.watt());
           return
-        }
+        } else if (data == "Print_Done" || data == "Print_Cancelled") {
+          self.isPrintDone = true
+          return
+        } else if (data == "Print_Started") {
+          self.isPrintStarted = true
+          self.isPrintDone = false
+          console.log("Data:" + data, "PrintStarted: " + self.isPrintStarted + " ,PrintDone: " + !self.isPrintDone)
+          return
+        };
 
-        self.allWatt += (parseFloat(data) * (parseInt(self.settings.settings.plugins.Wattometer.intervall()) / 3600)); 
-        self.totalWatt(self.allWatt.toFixed(2));
+        
+
+        if(!self.isPrintDone && self.isPrintStarted) {
+          self.allWatt += (parseFloat(data) * (parseInt(self.settings.settings.plugins.Wattometer.intervall()) / 3600)); 
+          self.totalWatt(self.allWatt.toFixed(2)); 
+        }
 
         self.watt.push(parseFloat(data));
 
@@ -81,9 +90,6 @@ $(function() {
         });
         chart.update();
       }
-
-
-      
     }
 
     // This is how our plugin registers itself with the application, by adding some configuration
