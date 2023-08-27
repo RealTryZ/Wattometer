@@ -39,6 +39,15 @@ $(function() {
         });
       }
       
+      self.onBeforeBinding = function(){
+        var existingProgressBar = $("#job_progressBar");
+        var parentDivProgressBar = existingProgressBar.parent();
+        if(parentDivProgressBar.length) {
+          var wattElement = $("<div><span title='Total power-usage of current print'>Power-Usage</span>: " +
+          "<strong id='power_usage' data-bind='text: totalWatt'></strong><strong> Wh</strong></div>");
+          wattElement.insertBefore(parentDivProgressBar);
+        }
+      }
 
       self.onDataUpdaterPluginMessage = function(plugin, data) {
         if(plugin !== "Wattometer") return;
@@ -95,15 +104,10 @@ $(function() {
     // This is how our plugin registers itself with the application, by adding some configuration
     // information to the global variable OCTOPRINT_VIEWMODELS
     OCTOPRINT_VIEWMODELS.push([
-        // This is the constructor to call for instantiating the plugin
         WattometerViewModel,
 
-        // This is a list of dependencies to inject into the plugin, the order which you request
-        // here is the order in which the dependencies will be injected into your view model upon
-        // instantiation via the parameters argument
-        ["settingsViewModel"],
+        ["settingsViewModel", "printerStateViewModel"],
 
-        // Finally, this is the list of selectors for all elements we want this view model to be bound to.
-        ["#tab_plugin_Wattometer"]
+        ["#tab_plugin_Wattometer", "#power_usage"]
     ]);
 });
