@@ -16,6 +16,8 @@ class Wattometer(octoprint.plugin.StartupPlugin,
     def __init__(self):
         self.fc = None
         self.watt = 0
+        self.printRunning = False
+        self.printDone = False
 
     def get_settings_defaults(self):
         return dict(
@@ -51,17 +53,43 @@ class Wattometer(octoprint.plugin.StartupPlugin,
     def addWatt(self):
         wattMeasurement = float(self.fc.call_http("getswitchpower", self._settings.get(["ain"]))['content'][:-1]) / 1000
         self.watt = wattMeasurement
-        self._plugin_manager.send_plugin_message(self._identifier, self.watt)
+        totalWatt = self.addWattToFile(wattMeasurement)
+        self._plugin_manager.send_plugin_message(self._identifier, str(self.watt) + "|" + str(totalWatt))
+
+    def addWattToFile(self, watt):
+        with open("saveFile.txt", "r+") as file:
+            fileContent = file.readline()
+            if fileContent == "":
+                fileContent = 0
+            if self.printDone:
+                return float(fileContent)
+            if self.printRunning:
+                self._plugin_manager.send_plugin_message(self._identifier, "Print_Started")
+                wattToWrite = float(fileContent) + watt
+                file.seek(0)
+                file.write(str(wattToWrite))
+                file.truncate()
+                return float(fileContent) + watt
+            return 0
+        
+    def resetFile(self):
+        with open("saveFile.txt", "w") as file:
+            file.write("0")
 
     def on_event(self, event, payload):
         if event == octoprint.events.Events.PRINT_STARTED:
-            self._plugin_manager.send_plugin_message(self._identifier, "Reset")
-            self._plugin_manager.send_plugin_message(self._identifier, "Print_Started")
+            self.resetFile()
+            self.printRunning = True
+            self.printDone = False
         if event == octoprint.events.Events.PRINT_CANCELLING:
-            self._plugin_manager.send_plugin_message(self._identifier, "Reset")
             self._plugin_manager.send_plugin_message(self._identifier, "Print_Cancelled")
+            self.resetFile()
+            self.printRunning = False
+            self.printDone = False
         if event == octoprint.events.Events.PRINT_DONE:
             self._plugin_manager.send_plugin_message(self._identifier, "Print_Done")
+            self.printRunning = False
+            self.printDone = True
 
     def get_assets(self):
         return dict(

@@ -60,10 +60,6 @@ $(function() {
           self.connectionError("")
           console.log(self.connectionError())
           return
-        } else if (data == "Reset"){
-          self.allWatt = 0
-          self.totalWatt(0.0);
-          return
         } else if (data == "Print_Done" || data == "Print_Cancelled") {
           self.isPrintDone = true
           return
@@ -75,13 +71,15 @@ $(function() {
         };
 
         
+        //Case: WattMeasurementData comes as wattMeasurement|totalWatt
+        totalWattSend = parseFloat(data.split("|")[1]) 
+        console.log("Totale Watt: " + totalWattSend)
+        self.allWatt = (totalWattSend * (parseInt(self.settings.settings.plugins.Wattometer.intervall()) / 3600)); 
+        self.totalWatt(self.allWatt.toFixed(2)); 
+        
 
-        if(!self.isPrintDone && self.isPrintStarted) {
-          self.allWatt += (parseFloat(data) * (parseInt(self.settings.settings.plugins.Wattometer.intervall()) / 3600)); 
-          self.totalWatt(self.allWatt.toFixed(2)); 
-        }
-
-        self.watt.push(parseFloat(data));
+        self.watt.push(parseFloat(data.split("|")[0]));
+        console.log("Neue Watt: " + data.split("|")[0])
 
         if (self.time >= -parseInt(self.settings.settings.plugins.Wattometer.displaytime())) {
           self.labels.unshift(self.time);
