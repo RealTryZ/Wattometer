@@ -2,6 +2,7 @@ import octoprint.plugin
 import octoprint.events
 import octoprint.logging
 import octoprint.events
+import os.path
 from octoprint.util import RepeatedTimer
 
 from fritzconnection import FritzConnection
@@ -57,7 +58,9 @@ class Wattometer(octoprint.plugin.StartupPlugin,
         self._plugin_manager.send_plugin_message(self._identifier, str(self.watt) + "|" + str(totalWatt))
 
     def addWattToFile(self, watt):
-        with open("saveFile.txt", "r+") as file:
+        if not os.path.exists(self.get_plugin_data_folder() + "\saveFile.txt"):
+            open(self.get_plugin_data_folder() + "\saveFile.txt", "w").close()
+        with open(self.get_plugin_data_folder() + "\saveFile.txt", "r+") as file:
             fileContent = file.readline()
             if fileContent == "":
                 fileContent = 0
@@ -73,7 +76,7 @@ class Wattometer(octoprint.plugin.StartupPlugin,
             return 0
         
     def resetFile(self):
-        with open("saveFile.txt", "w") as file:
+        with open(self.get_plugin_data_folder() + "\saveFile.txt", "w") as file:
             file.write("0")
 
     def on_event(self, event, payload):
