@@ -20,7 +20,6 @@ class Wattometer(octoprint.plugin.StartupPlugin,
         self.watt = 0
         self.printRunning = False
         self.printDone = False
-        self.save_file_path = os.path.join(self.get_plugin_data_folder(), "saveFile.txt")
 
     def get_settings_defaults(self):
         return dict(
@@ -31,6 +30,7 @@ class Wattometer(octoprint.plugin.StartupPlugin,
 
     def on_settings_initialized(self):
         octoprint.plugin.SettingsPlugin.on_settings_initialized(self)
+        self.save_file_path = os.path.join(self.get_plugin_data_folder(), "saveFile.txt")
         self.connect()
 
     def on_settings_save(self, data):

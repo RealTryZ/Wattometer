@@ -1,6 +1,6 @@
 # OctoPrint-Wattometer
 
-Wattometer displays the measured power usage of your FRITZ!Dect 200 device in OctoPrint.
+Wattometer displays the measured power usage of your FRITZ!Dect 200/210 device in OctoPrint.
 It displays watt measurements for up to a minute in a graph and sums up the total watt usage.
 
 ## Setup
